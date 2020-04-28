@@ -27,6 +27,10 @@ import com.scalesampark.services.EmployeeService;
 import com.scalesampark.util.ResponseEntityNodes;
 import com.scalesampark.validator.ValidatorUtil;
 
+/**
+ * This test controller is to test the EmployeeController.
+ *
+ */
 @SpringBootTest(classes = { Application.class,
 		ValidatorUtil.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeControllerTest {
