@@ -1,5 +1,6 @@
 package com.scalesampark.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,26 +34,21 @@ public class MessageTypeController {
 	ValidatorUtil validatorUtil;
 
 	@GetMapping(produces="application/json")
-	public ResponseEntity<Object> getAllMessageTypes() {
+	public ResponseEntity<Object> getAllMessageTypes() throws Exception {
 		Map<String, Object> map = null;
-		try {
-			List<MessageType> list = messageTypeService.getAllMessageTypes();
-			if (list.size() > 0) {
-				map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
-				map.put("data", list);
-			} else {
-				map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
-				map.put("message", "No records available");
-			}
-			return new ResponseEntity<Object>(map, HttpStatus.OK);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+		List<MessageType> list = messageTypeService.getAllMessageTypes();
+		if (list.size() > 0) {
+			map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
+			map.put("data", list);
+		} else {
+			map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
+			map.put("message", "No records available");
 		}
+		return new ResponseEntity<Object>(map, HttpStatus.OK);
 	}
 
 	@PostMapping(consumes="application/json",produces="application/json")
-	public ResponseEntity<Object> saveMessageType(@RequestBody MessageType messageType) {
+	public ResponseEntity<Object> saveMessageType(@RequestBody MessageType messageType) throws SQLException {
 		Map<String, Object> map = null;
 
 		List<String> errors = new ArrayList<String>();
@@ -63,23 +59,17 @@ public class MessageTypeController {
 			return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
 		}
 
-		try {
-			long id = messageTypeService.saveMessageType(messageType);
-			map = HttpStatusMapsConstants.HTTP_STATUS_201_CREATED;
-			map.put("message", "Message Type created successfully.");
-			Map<String, Object> innerMap = new HashMap<>(1);
-			innerMap.put("id", id);
-			map.put("data", innerMap);
-			return new ResponseEntity<Object>(map, HttpStatus.CREATED);
-		} catch (Exception e) {
-			e.printStackTrace();
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		}
+		long id = messageTypeService.saveMessageType(messageType);
+		map = HttpStatusMapsConstants.HTTP_STATUS_201_CREATED;
+		map.put("message", "Message Type created successfully.");
+		Map<String, Object> innerMap = new HashMap<>(1);
+		innerMap.put("id", id);
+		map.put("data", innerMap);
+		return new ResponseEntity<Object>(map, HttpStatus.CREATED);
 	}
 
 	@GetMapping(path = "/{id}", produces="application/json")
-	public ResponseEntity<Object> getMessageTypeById(@PathVariable("id") String stringId) {
+	public ResponseEntity<Object> getMessageTypeById(@PathVariable("id") String stringId) throws Exception {
 		Map<String, Object> map = null;
 		List<String> errors = new ArrayList<String>();
 		errors = validatorUtil.validateMessageTypeId(stringId, errors);
@@ -90,19 +80,14 @@ public class MessageTypeController {
 		}
 
 		Long id = Long.valueOf(stringId);
-		try {
-			MessageType messageType = messageTypeService.getMessageTypeById(id);
-			map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
-			map.put("data", messageType);
-			return new ResponseEntity<Object>(map, HttpStatus.OK);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		}
+		MessageType messageType = messageTypeService.getMessageTypeById(id);
+		map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
+		map.put("data", messageType);
+		return new ResponseEntity<Object>(map, HttpStatus.OK);
 	}
 
 	@DeleteMapping(path = "/{id}", produces="application/json")
-	public ResponseEntity<Object> deleteMessageTypeById(@PathVariable("id") String stringId) {
+	public ResponseEntity<Object> deleteMessageTypeById(@PathVariable("id") String stringId) throws Exception {
 		Map<String, Object> map = null;
 		List<String> errors = new ArrayList<String>();
 		errors = validatorUtil.validateMessageTypeId(stringId, errors);
@@ -113,15 +98,10 @@ public class MessageTypeController {
 		}
 
 		Long id = Long.valueOf(stringId);
-		try {
-			int rowCount = messageTypeService.deleteMessageTypeById(id);
-			map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
-			map.put("message", "Message Type deleted ");
-			map.put("data", rowCount);
-			return new ResponseEntity<Object>(map, HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		}
+		int rowCount = messageTypeService.deleteMessageTypeById(id);
+		map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
+		map.put("message", "Message Type deleted ");
+		map.put("data", rowCount);
+		return new ResponseEntity<Object>(map, HttpStatus.NO_CONTENT);
 	}
 }

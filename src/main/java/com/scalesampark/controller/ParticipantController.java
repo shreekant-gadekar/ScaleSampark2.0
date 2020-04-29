@@ -48,7 +48,7 @@ public class ParticipantController {
 	ValidatorUtil validatorUtil;
 
 	@RequestMapping(path = "/{id}",produces="application/json")
-	public ResponseEntity<Object> getParticipantById(@PathVariable("id") String stringId) {
+	public ResponseEntity<Object> getParticipantById(@PathVariable("id") String stringId) throws DataAccessException, Exception {
 		Map<String, Object> map = null;
 		List<String> errors = new ArrayList<String>();
 		validatorUtil.validateParticipantId(stringId, errors);
@@ -61,14 +61,14 @@ public class ParticipantController {
 
 		Long id = Long.valueOf(stringId);
 
-		try {
+//		try {
 			Participant participant = participantService.getParticipantById(id);
 			if (participant != null) {
 				map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
 				map.put("data", convertParticipantToParticipantDto(participant));
 			}
 			return new ResponseEntity<Object>(map, HttpStatus.OK);
-		} catch (DataAccessException e) {
+		/*} catch (DataAccessException e) {
 			System.err.println("204 >>> \n" + e);
 			map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
 			return new ResponseEntity<Object>(map, HttpStatus.NO_CONTENT);
@@ -76,7 +76,7 @@ public class ParticipantController {
 			map = HttpStatusMapsConstants.HTTP_STATUS_500_INTERNAL_SERVER_ERROR;
 			System.err.println("500 >>> \n" + e);
 			return new ResponseEntity<Object>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		}*/
 	}
 
 	@GetMapping(produces="application/json")

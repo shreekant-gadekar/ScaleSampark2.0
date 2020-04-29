@@ -42,7 +42,6 @@ public class EmployeeController {
 	
 	@GetMapping(produces="application/json")
 	public ResponseEntity<Object> getAllEmployees() {
-		
 		List<Employee> employees = employeeService.getAllEmployees();
 		Map<String, Object> map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
 		map.put("data", employees);
@@ -50,7 +49,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping(path = "/{id}", produces="application/json")
-	public ResponseEntity<Object> getEmployeeById(@PathVariable("id") String stringId) {
+	public ResponseEntity<Object> getEmployeeById(@PathVariable("id") String stringId) throws DataAccessException, Exception {
 		Employee employee = null;
 		Map<String, Object> map = null;
 		List<String> errors = new ArrayList<String>();
@@ -65,42 +64,24 @@ public class EmployeeController {
 
 		Long id = Long.valueOf(stringId);
 
-		try {
-			employee = employeeService.getEmployeeById(id);
-			if (employee != null) {
-				map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
-				map.put("data", employee);
-			}
-			return new ResponseEntity<Object>(map, HttpStatus.OK);
-		} catch (DataAccessException e) {
-			logger.debug("204 >>> \t" + e.getMessage());
-			map = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
-			return new ResponseEntity<Object>(map, HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			logger.debug("400 >>> \t" + e.getMessage());
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+		employee = employeeService.getEmployeeById(id);
+		if (employee != null) {
+			map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
+			map.put("data", employee);
 		}
+		return new ResponseEntity<Object>(map, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> saveEmployee(@Valid @RequestBody Employee t) {
+	public ResponseEntity<Object> saveEmployee(@Valid @RequestBody Employee t) throws SQLException, Exception {
 		Map<String, Object> map = null;
-		try {
-			final long id = employeeService.saveEmployee(t);
-			map = HttpStatusMapsConstants.HTTP_STATUS_201_CREATED;
-			map.put("message", "Employee created successfuly.");
-			Map<String, Object> hashMap = new HashMap<>(1);
-			hashMap.put("id", id);
-			map.put("data",  hashMap);
+		final long id = employeeService.saveEmployee(t);
+		map = HttpStatusMapsConstants.HTTP_STATUS_201_CREATED;
+		map.put("message", "Employee created successfuly.");
+		Map<String, Object> hashMap = new HashMap<>(1);
+		hashMap.put("id", id);
+		map.put("data",  hashMap);
 
-			return new ResponseEntity<Object>(map, HttpStatus.CREATED);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			logger.debug("400 >>> \t" + e.getMessage());
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		}
+		return new ResponseEntity<Object>(map, HttpStatus.CREATED);
 	}
 }

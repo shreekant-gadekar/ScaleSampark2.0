@@ -1,7 +1,6 @@
 package com.scalesampark.services;
 
 import java.sql.SQLException;
-import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -52,11 +51,7 @@ public class EmployeeService {
 	 * @throws Exception
 	 */
 	public Employee getEmployeeById(long employeeId) throws Exception {
-		try {
 			return employeeDao.getEmployeeById(employeeId);
-		} catch (Exception e) {
-			throw new Exception();
-		}
 	}
 
 	/**

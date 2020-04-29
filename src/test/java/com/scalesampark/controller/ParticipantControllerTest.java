@@ -74,19 +74,6 @@ public class ParticipantControllerTest {
 	
 	@Test
 	public void getParticipantById_test() {
-		/*Participant expectedParticipant = participantWithValidData1;
-		try {
-			when(participantService.getParticipantById(12)).thenReturn(expectedParticipant);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
-		@SuppressWarnings("unchecked")
-		ParticipantDto resultParticipantDto = responseEntityNodes
-				.getParticipantDto.apply(participantController.get("12"));
-		assertEquals(resultParticipantDto.getNickname(),expectedParticipant.getNickname());
-		assertEquals(resultParticipantDto.getParticipantUuid(),expectedParticipant.getParticipantUuid().toString());
-		*/
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -113,6 +100,23 @@ public class ParticipantControllerTest {
 
 	        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	        String expectedJson = "{\"status\":400,\"message\":\"Bad Request\",\"data\":null,\"errors\":[\"Participant Id should not be blank or 0\"]}";
+			JSONAssert.assertEquals(expectedJson , response.getBody(), true);
+		} catch (Exception e) {
+			System.err.println("Exception" +e);
+		}
+	}
+	
+	@Test
+	public void getParticipantById_with_wrong_id_test() {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_JSON);
+
+	        // send 0 value as a path variable to get the Participant
+	        ResponseEntity<String> response = restTemplate.getForEntity("/participants/110", String.class);
+
+	        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	        String expectedJson = "{\"status\":400,\"message\":\"Bad Request\",\"data\":null,\"errors\":[\"Data not found for specified details.\"]}";
 			JSONAssert.assertEquals(expectedJson , response.getBody(), true);
 		} catch (Exception e) {
 			System.err.println("Exception" +e);

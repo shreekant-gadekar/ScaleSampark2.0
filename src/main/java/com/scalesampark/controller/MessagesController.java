@@ -47,19 +47,13 @@ public class MessagesController {
 	@GetMapping(produces="application/json")
 	public ResponseEntity<Object> getAllMessages() {
 		Map<String, Object> map = null;
-		try {
-			map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
-			map.put("data", messageService.getAllMessages());
-			return new ResponseEntity<Object>(map, HttpStatus.OK);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			System.err.println(e);
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		}
+		map = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
+		map.put("data", messageService.getAllMessages());
+		return new ResponseEntity<Object>(map, HttpStatus.OK);
 	}
 
 	@PostMapping(produces="application/json", consumes="application/json")
-	public ResponseEntity<Object> saveMessage(@Valid @RequestBody Message message) {
+	public ResponseEntity<Object> saveMessage(@Valid @RequestBody Message message) throws Exception {
 		Map<String, Object> map = null;
 		List<String> errors = new ArrayList<String>();
 
@@ -90,16 +84,12 @@ public class MessagesController {
 			errors.add("Invalid message type id");
 			map.put("errors", errors);
 			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			map = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			System.err.println(e);
-			return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@GetMapping(path = "/{participantId}", produces="application/json")
 	public ResponseEntity<Object> getAllUnseenMessagesByParticipant(
-			@PathVariable("participantId") String stringParticipantId) {
+			@PathVariable("participantId") String stringParticipantId) throws Exception {
 		Map<String, Object> outerMap = null;
 		List<String> errors = new ArrayList<String>();
 
@@ -113,22 +103,16 @@ public class MessagesController {
 
 		Long participantId = Long.valueOf(stringParticipantId);
 
-		try {
-			Map<String, Object> map = new HashMap<String, Object>(1);
-			List<Message> messages = messageService.getAllUnseenMessagesByParticipant(participantId);
-			map.put("messages", messages);
-			if (messages.size() > 0) {
-				outerMap = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
-				outerMap.put("data", map);
-				return new ResponseEntity<Object>(outerMap, HttpStatus.OK);
-			} else {
-				outerMap = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
-				return new ResponseEntity<Object>(outerMap, HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			outerMap = HttpStatusMapsConstants.HTTP_STATUS_400_BAD_REQUEST;
-			System.err.println(e);
-			return new ResponseEntity<Object>(outerMap, HttpStatus.BAD_REQUEST);
+		Map<String, Object> map = new HashMap<String, Object>(1);
+		List<Message> messages = messageService.getAllUnseenMessagesByParticipant(participantId);
+		map.put("messages", messages);
+		if (messages.size() > 0) {
+			outerMap = HttpStatusMapsConstants.HTTP_STATUS_200_OK;
+			outerMap.put("data", map);
+			return new ResponseEntity<Object>(outerMap, HttpStatus.OK);
+		} else {
+			outerMap = HttpStatusMapsConstants.HTTP_STATUS_204_NO_CONTENT;
+			return new ResponseEntity<Object>(outerMap, HttpStatus.NO_CONTENT);
 		}
 	}
 }

@@ -104,6 +104,23 @@ public class EmployeeControllerTest {
 			System.err.println("Exception" + e);
 		}
 	}
+	
+	@Test
+	public void getEmployeeById_with_wrong_id_test() {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+
+			// send 310 value as a path variable to get the Employee
+			ResponseEntity<String> response = restTemplate.getForEntity("/employees/310", String.class);
+
+			String expectedJSON = "{\"status\":400,\"message\":\"Bad Request\",\"data\":null,\"errors\":[\"Data not found for specified details.\"]}";
+			assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+			JSONAssert.assertEquals(expectedJSON, response.getBody(), true);
+		} catch (Exception e) {
+			System.err.println("Exception" + e);
+		}
+	}
 
 	@Test
 	public void getEmployeeById_with_alphanumeric_value_test() {
