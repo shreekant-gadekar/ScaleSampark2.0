@@ -37,7 +37,7 @@ public interface EmployeeDao {
 	 * @param id Long
 	 * @return Employee
 	 */
-	public Employee getEmployeeById(Long id);
+	public Employee getEmployeeById(Long id) throws Exception ;
 	
 	/**
 	 * This method is used to get the list of employee objects from database.

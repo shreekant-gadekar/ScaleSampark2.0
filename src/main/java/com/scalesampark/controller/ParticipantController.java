@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class ParticipantController {
 
 	@Autowired
 	ValidatorUtil validatorUtil;
+	
+	@Autowired
+	ModelMapper modelMapper;
 
 	@RequestMapping(path = "/{id}",produces="application/json")
 	public ResponseEntity<Object> getParticipantById(@PathVariable("id") String stringId) throws DataAccessException, Exception {
@@ -139,10 +143,6 @@ public class ParticipantController {
 	}
 
 	public ParticipantDto convertParticipantToParticipantDto(Participant participant) {
-		ParticipantDto dto = new ParticipantDto();
-		dto.setNickname(participant.getNickname());
-		dto.setParticipantUuid("" + participant.getParticipantUuid());
-		dto.setLastSeen(participant.getLastSeen().toString());
-		return dto;
+		return modelMapper.map(participant, ParticipantDto.class);
 	}
 }

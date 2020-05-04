@@ -1,5 +1,6 @@
 package com.scalesampark;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
@@ -17,7 +18,6 @@ public class Application {
    public MessageSource messageSource() {
       ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
       messageSource.setBasename("classpath:messages");
-      messageSource.setDefaultEncoding("UTF-8");
       return messageSource;
    }
 	
@@ -28,6 +28,9 @@ public class Application {
 	    return bean;
 	 }
 	
-	
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
+	}
 }
 

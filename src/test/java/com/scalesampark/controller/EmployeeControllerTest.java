@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.scalesampark.Application;
 import com.scalesampark.domains.Employee;
@@ -31,14 +32,17 @@ import com.scalesampark.validator.ValidatorUtil;
  * This test controller is to test the EmployeeController.
  *
  */
+@ActiveProfiles("test")
 @SpringBootTest(classes = { Application.class,
 		ValidatorUtil.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeControllerTest {
 
-	@InjectMocks
+//	@InjectMocks
+	@Autowired
 	EmployeeController employeeController;
 
-	@Mock
+//	@Mock
+	@Autowired
 	EmployeeService employeeService;
 
 	@Autowired
@@ -77,13 +81,18 @@ public class EmployeeControllerTest {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
+			when(employeeService.getEmployeeById(26)).thenReturn(employeeWithValidData1);
 			// send 0 value as a path variable to get the Participant
-			ResponseEntity<String> response = restTemplate.getForEntity("/employees/26", String.class);
-
-			String expectedJSON = "{\"status\":200,\"message\":\"Successful\",\"data\":{\"id\":26,\"email\":\"shreekant.gadekar@gmail.com\",\"name\":\"Shrikant Gadekar\"},\"errors\":null}";
-			assertEquals(HttpStatus.OK, response.getStatusCode());
-			JSONAssert.assertEquals(expectedJSON, response.getBody(), true);
+//			ResponseEntity<String> response = restTemplate.getForEntity("/employees/26", String.class);
+			Employee resultEmployee = responseEntityNodes.getEmployee.apply(employeeController.getEmployeeById("26"));
+//			String expectedJSON = "{\"status\":200,\"message\":\"Successful\",\"data\":{\"id\":26,\"email\":\"shreekant.gadekar@gmail.com\",\"name\":\"Shrikant Gadekar\"},\"errors\":null}";
+//			assertEquals(HttpStatus.OK, response.getStatusCode());
+//			JSONAssert.assertEquals(expectedJSON, response.getBody(), true);
+			assertEquals(resultEmployee.getName(), "Shrikant Gadekar");
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

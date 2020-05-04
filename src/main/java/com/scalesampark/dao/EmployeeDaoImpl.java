@@ -63,7 +63,7 @@ public class EmployeeDaoImpl extends JdbcDaoSupport implements EmployeeDao {
 	}
 
 	@Override
-	public Employee getEmployeeById(Long id) {
+	public Employee getEmployeeById(Long id) throws Exception {
 		String sql = "SELECT * FROM employee WHERE id = ?";
 		return getJdbcTemplate()
 				.queryForObject(sql,

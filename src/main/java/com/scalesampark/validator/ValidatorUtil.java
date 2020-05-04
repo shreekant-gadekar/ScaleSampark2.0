@@ -107,12 +107,10 @@ public class ValidatorUtil {
 	public List<String> validateMessage(Message message, List<String> errors) {
 		
 		if(isValueNullOrEmpty(message.getMessageTypeId()))
-//			errors.add("Message Type Id should not be blank or 0");
 			errors.add(messageUtil.getMessage("error.common.notblank", "Message Type Id"));
 		
 		if(isValueNullOrEmpty(message.getParticipantUuid()))
-//			errors.add("Participant Uuid should not be blank or 0");
-		errors.add(messageUtil.getMessage("error.common.notblank", "Participant Uuid"));
+			errors.add(messageUtil.getMessage("error.common.notblank", "Participant Uuid"));
 			
 		return errors;
 	}
@@ -163,8 +161,7 @@ public class ValidatorUtil {
 			errors.add(messageUtil.getMessage("error.messageType.notblank"));
 		
 		if(!isStringOnlyAlphabet(messageType.getMessageTypeName()))
-//			errors.add("Message type name should be alphabets only");
-		errors.add(messageUtil.getMessage("error.common.alphabetsOnly", "Message type name"));
+			errors.add(messageUtil.getMessage("error.common.alphabetsOnly", "Message type name"));
 		
 		return errors;
 	}
@@ -178,14 +175,11 @@ public class ValidatorUtil {
 	 */
 	public List<String> validateEmployeeId(String employeeId, List<String> errors) {
 		if(isValueNullOrEmpty(employeeId))
-//			errors.add("Employe Id should not be blank or 0");
-		errors.add(messageUtil.getMessage("error.common.notblank", "Employe Id"));
+			errors.add(messageUtil.getMessage("error.common.notblank", "Employe Id"));
 		
 		if(!isNumberOnly(employeeId))
-//			errors.add("Employe Id should be number only");
-		errors.add(messageUtil.getMessage("error.common.numberOnly", "Employe Id"));
+			errors.add(messageUtil.getMessage("error.common.numberOnly", "Employe Id"));
 		
 		return errors;
 	}
-//map.put("data", messageUtil.getMessage("employee.number") + messageUtil.getMessage("employee.number.with1", new Object[] {"Employee Id ------"}));
 }
